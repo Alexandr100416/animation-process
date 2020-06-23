@@ -20,12 +20,17 @@ loader.add("catImage", "/beaver.svg").load(setup);
 //This `setup` function will run when the image has loaded
 function setup() {
   //Create the cat sprite
-  let cat = new Sprite(resources["catImage"].texture);
-  cat.x = 96;
-  cat.y = 96;
-  cat.width=90;
-  cat.height=90;
+  let beaver = new Sprite(resources["catImage"].texture);
+  beaver.position.set(96, 96);
+  //   cat.x = 96;
+  //   cat.y = 96;
+  beaver.width = 90;
+  beaver.height = 90;
+  //   cat.scale.x = 0.3;
+  //   cat.scale.y = 0.3;
+  // cat.scale.set(0.5, 0.5);
+  beaver.rotation = 0.5;
 
   //Add the cat to the stage
-  app.stage.addChild(cat);
+  app.stage.addChild(beaver);
 }
