@@ -1,36 +1,59 @@
-let Application = PIXI.Application;
-let loader = PIXI.loader;
-let resources = PIXI.loader.resources;
-let Sprite = PIXI.Sprite;
+class Application {
+  constructor() {
+    this.renderer = new PIXI.Renderer({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      backgroundColor: 0x1099bb,
+      resolution: 1,
+    });
+    document.body.appendChild(this.renderer.view);
+    this.ticker = new PIXI.Ticker();
+    this.stage = new PIXI.Container();
 
-let app = new Application({
-  width: 256,
-  height: 256,
-  antialias: true,
-  transparent: false,
-  resolution: 1,
+    this.ticker .add(this.render.bind(this), PIXI.UPDATE_PRIORITY.LOW);
+this.ticker.start();
+}
+    
+    get screen (){
+        return this.renderer.screen;
+    }
+  render (){
+    this.renderer.render(this.stage);
+}
+}
+const app = window.app = new Application();
+
+
+const container = new PIXI.Container();
+
+app.stage.addChild(container);
+
+// Create a new texture
+const texture = PIXI.Texture.from("./img/beaver.svg");
+
+// Create a 5x5 grid of bunnies
+for (let i = 0; i < 25; i++) {
+  const bunny = new PIXI.Sprite(texture);
+  bunny.anchor.set(0.5);
+  bunny.x = (i % 5) * 40;
+  bunny.y = Math.floor(i / 5) * 40;
+  bunny.width = 35;
+  bunny.height = 35;
+  container.addChild(bunny);
+}
+
+// Move container to the center
+container.x = app.screen.width / 2;
+container.y = app.screen.height / 2;
+
+// Center bunny sprite in local container coordinates
+container.pivot.x = container.width / 2;
+container.pivot.y = container.height / 2;
+
+// Listen for animate update
+app.ticker.add((delta) => {
+  // rotate the container!
+  // use delta to create frame-independent transform
+  container.rotation -= 0.01 * delta;
 });
 
-//Add the canvas that Pixi automatically created for you to the HTML document
-document.body.appendChild(app.view);
-
-//load an image and run the `setup` function when it's done
-loader.add("catImage", "/beaver.svg").load(setup);
-
-//This `setup` function will run when the image has loaded
-function setup() {
-  //Create the cat sprite
-  let beaver = new Sprite(resources["catImage"].texture);
-  beaver.position.set(96, 96);
-  //   cat.x = 96;
-  //   cat.y = 96;
-  beaver.width = 90;
-  beaver.height = 90;
-  //   cat.scale.x = 0.3;
-  //   cat.scale.y = 0.3;
-  // cat.scale.set(0.5, 0.5);
-  beaver.rotation = 0.5;
-
-  //Add the cat to the stage
-  app.stage.addChild(beaver);
-}
